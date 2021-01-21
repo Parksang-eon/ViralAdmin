@@ -49,6 +49,9 @@
       <div class="table-header">
         <div class="table-header-select">
           <span>검색결과 <span>{{ totalItemCount }}</span>건</span>
+          <el-select v-model="filter.showPage" @change="selectShowPage(filter.showPage)">
+            <el-option v-for="item in pageView" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
         </div>
       </div>
       <el-table
@@ -67,9 +70,6 @@
               <img :src="row.preview_image_uri" style="width: 50px;, heigth: 50px;">
             </div>
             <p>{{ row.title }}</p>
-            <!-- <U>
-              <create-link />
-            </U> -->
           </template>
         </el-table-column>
         <el-table-column label="바이럴 링크" prop="external_uri" />
@@ -77,7 +77,7 @@
         <el-table-column label="유효기간" prop="expire_at" />
         <el-table-column label="발생매출(원)" prop="total_sales_amount" />
         <el-table-column label="처리" prop="link">
-          <a target="_blank" :href="`${brandStoreURI}/${row.brand_name}/`"><el-button type="primary">보러가기</el-button></a>
+          <a target="_blank" :href="`${brandStoreURI}/`"><el-button type="primary">보러가기</el-button></a>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -114,7 +114,9 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  // components: { CreateLink },
+  components: {
+    // CreateLink
+  },
   // directives: { waves },
   filters: {
     statusFilter(status) {
@@ -143,8 +145,8 @@ export default {
         keyword: '',
         keywordSelect: '',
         valid: 'all',
-        offSet: 0,
-        showPage: 10
+        showPage: 10,
+        offSet: 0
       },
       loading: false,
       dateList: [
@@ -161,6 +163,13 @@ export default {
         { value: 'all', label: '전체' },
         { value: 'available', label: '유효' },
         { value: 'expiration', label: '만료' }
+      ],
+      pageView: [
+        { value: 10, label: '10개씩보기' },
+        { value: 30, label: '30개씩보기' },
+        { value: 50, label: '50개씩보기' },
+        { value: 100, label: '100개씩보기' },
+        { value: 200, label: '200개씩보기' }
       ],
       links: [],
       linksForDisplay: [],
@@ -191,6 +200,10 @@ export default {
     },
     selectValid(valid) {
       this.filter.valid = valid
+    },
+    selectShowPage(showPage) {
+      this.filter.showPage = showPage
+      this.lookupLinkList()
     },
     async lookupLinkList() {
       this.loading = true

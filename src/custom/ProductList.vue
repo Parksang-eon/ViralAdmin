@@ -8,10 +8,13 @@
           <div style="padding: 14px;">
             <p>{{ productList.title }}</p>
             <p>{{ productList.brand_name }}</p>
-            <div>
+            <div v-if="productList.display_discount_ratio !== 0">
               <p>{{ productList.display_discount_ratio }}%</p>
               <p>{{ productList.display_discounted_price }}</p>
               <p>{{ productList.origin_customer_price }}</p>
+            </div>
+            <div v-else>
+              <p>{{ productList.display_discounted_price }}</p>
             </div>
             <div class="bottom clearfix">
               <a><el-button type="info" plain class="button">제품 상세보기</el-button></a>

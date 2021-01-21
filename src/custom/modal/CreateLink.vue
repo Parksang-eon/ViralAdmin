@@ -8,10 +8,13 @@
         <img :src="modalInfo.preview_image_uri" class="image">
         <p>{{ modalInfo.title }}</p>
         <p>{{ modalInfo.brand_name }}</p>
-        <div>
+        <div v-if="modalInfo.display_discount_ratio !== 0">
           <p>{{ modalInfo.display_discount_ratio }}</p>
           <p>{{ modalInfo.display_discounted_price }}</p>
           <p>{{ modalInfo.origin_customer_price }}</p>
+        </div>
+        <div v-else>
+          <p>{{ modalInfo.display_discounted_price }}</p>
         </div>
       </div>
     </div>
